@@ -3,7 +3,9 @@ package com.codewithabhi.bottomnavigation;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -15,18 +17,45 @@ import com.codewithabhi.bottomnavigation.Fragments.Profile_Fragment;
 import com.codewithabhi.bottomnavigation.Fragments.Search_Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
+
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
+    ViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.navggation);
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame , new Home_Fragment());
-        ft.commit();
+
+
+
+
+        viewPager = findViewById(R.id.pager);
+        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager()));
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -35,20 +64,20 @@ public class MainActivity extends AppCompatActivity {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 switch (item.getItemId()) {
                     case R.id.home:
-                        Toast.makeText(MainActivity.this, "HOME ARRIVED", Toast.LENGTH_SHORT).show();
-                        ft.replace(R.id.frame , new Home_Fragment());
+                        viewPager.setCurrentItem(0);
+
                         break;
                     case R.id.search:
-                        Toast.makeText(MainActivity.this, "SEARCH ARRIVED", Toast.LENGTH_SHORT).show();
-                        ft.replace(R.id.frame , new Search_Fragment());
+                        viewPager.setCurrentItem(1);
+
                         break;
                     case R.id.camera:
-                        Toast.makeText(MainActivity.this, "CAMERA ARRIVED", Toast.LENGTH_SHORT).show();
-                        ft.replace(R.id.frame , new Camera_Fragment());
+                        viewPager.setCurrentItem(2);
+
                         break;
                     case R.id.profile:
-                        Toast.makeText(MainActivity.this, "PROFILE ARRIVED", Toast.LENGTH_SHORT).show();
-                        ft.replace(R.id.frame , new Profile_Fragment());
+                        viewPager.setCurrentItem(3);
+
                         break;
                 }
                 ft.commit();
